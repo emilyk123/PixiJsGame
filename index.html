@@ -10,22 +10,54 @@
 </head>
 <body>
     <script>
+        // Create the Pixi Application
         const app = new PIXI.Application({
             width: 640,
             height: 360,
             backgroundColor: 0xffffff
         });
 
+        // Add the application to the body
+        document.body.appendChild(app.view);
+
+        let x = 10;
+        let y = 10;
+
+        // Graphics object, fill color, rectangle
         let obj = new PIXI.Graphics();
         obj.beginFill(0xff0000);
         obj.drawRect(10, 10, 100, 100);
 
+        // Add it to the stage to render
         app.stage.addChild(obj);
-        document.body.appendChild(app.view);
 
         function start() {
-            left.press = () => {};
+            // Define the keyboard code variables
+            const left = keyboard(37),
+                up = keyboard(38),
+                right = keyboard(39);
+                down = keyboard(40);
+
+            left.press = () => {
+                x -= 20;
+            };
             left.release = () => {};
+
+            right.press = () => {
+                x += 20;
+            };
+            right.release = () => {};
+
+            up.press = () => {
+                y -= 20;
+            };
+            up.release = () => {};
+
+            down.press = () => {
+                y += 20;
+            };
+            down.release = () => {};
+
             app.ticker.add((delta) => gameLoop(delta));
         }
 
@@ -34,6 +66,46 @@
             obj.y = y;
         }
 
+        // keyboard helper
+        function keyboard(keyCode) {
+            const key = {};
+            key.code = keyCode;
+            key.isDown = false;
+            key.isUp = true;
+            key.press = undefined;
+            key.release = undefined;
+
+            // Key is pressed
+            key.downHandler = (event) => {
+                if (event.keyCode === key.code) {
+                    if (key.isUp && key.press) {
+                        key.press();
+                    }
+                    key.isDown = true;
+                    key.isUp = false;
+                }
+                event.preventDefault();
+            };
+
+            // Key is released
+            key.upHandler = (event) => {
+                if (event.keyCode === key.code) {
+                    if (key.isDown && key.release) {
+                        key.release();
+                    }
+                    key.isDown = false;
+                    key.isUp = true;
+                }
+                event.preventDefault();
+            };
+
+            // Attach keydown and keyup event listeners
+            window.addEventListener("keydown", key.downHandler.bind(key), false);
+            window.addEventListener("keyup", key.upHandler.bind(key), false);
+            return key;
+        }
+
+        start();
     </script>
 </body>
 </html>
