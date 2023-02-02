@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body{
+            background:#000000;
+        }
+    </style>
+    <script src="https://pixijs.download/release/pixi.min.js"></script>
+</head>
+<body>
+    <script>
+        const app = new PIXI.Application({
+            width: 640,
+            height: 360,
+            backgroundColor: 0xffffff
+        });
+
+        let obj = new PIXI.Graphics();
+        obj.beginFill(0xff0000);
+        obj.drawRect(10, 10, 100, 100);
+
+        app.stage.addChild(obj);
+        document.body.appendChild(app.view);
+
+        function start() {
+            left.press = () => {};
+            left.release = () => {};
+            app.ticker.add((delta) => gameLoop(delta));
+        }
+
+        function gameLoop(delta) {
+            obj.x = x;
+            obj.y = y;
+        }
+
+    </script>
+</body>
+</html>
